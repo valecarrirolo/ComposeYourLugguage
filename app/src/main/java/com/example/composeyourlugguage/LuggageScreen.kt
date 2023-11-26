@@ -31,16 +31,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 
 // comp+invio per creare Composable Fun
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun LuggageScreen(vm: LuggageViewmodel) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             MediumTopAppBar(
                 title = { Text(text = "Compose Your Luggage") },
+                scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     MaterialTheme.colorScheme.primaryContainer
                 )
