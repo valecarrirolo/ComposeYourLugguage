@@ -15,6 +15,14 @@ class LuggageViewmodel : ViewModel() {
             PersonalItemInLuggage(item, mapItemQuantity[item] ?: 0)
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+    fun onQuantityChange(item: PersonalItem, quantity: Int) {
+        if (quantity == 0) {
+            mapItemQuantity.value -= item
+        } else {
+            mapItemQuantity.value += item to quantity
+        }
+    }
 }
 
 data class PersonalItemInLuggage(val item: PersonalItem, val quantity: Int)

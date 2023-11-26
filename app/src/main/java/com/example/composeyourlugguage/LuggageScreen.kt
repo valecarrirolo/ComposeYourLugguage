@@ -1,6 +1,7 @@
 package com.example.composeyourlugguage
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
@@ -43,16 +48,25 @@ fun LuggageScreen(vm: LuggageViewmodel) {
                 .fillMaxSize()
         ) {
             items(personalItems) { (item, quantity) ->
-                PersonalItem(item = item, quantity = quantity)
+                PersonalItem(
+                    item = item,
+                    quantity = quantity,
+                    onQuantityChange = { newQuantity ->
+                        vm.onQuantityChange(item, newQuantity)
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-private fun PersonalItem(item: PersonalItem, quantity: Int) {
+private fun PersonalItem(item: PersonalItem, quantity: Int, onQuantityChange: (Int) -> Unit) {
+    val inLuggage = quantity > 0
     Row(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+        modifier = Modifier
+            .clickable { onQuantityChange(quantity + 1) }
+            .padding(horizontal = 16.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -61,13 +75,16 @@ private fun PersonalItem(item: PersonalItem, quantity: Int) {
                 .padding(4.dp)
                 .border(
                     width = 2.dp,
-                    color = Color.LightGray,
+                    color = if (inLuggage) Color.Green else Color.LightGray,
                     shape = RoundedCornerShape(8.dp)
                 )
                 .padding(2.dp),
             style = MaterialTheme.typography.displayLarge
         )
-        Column(Modifier.padding(horizontal = 8.dp)) {
+        Column(
+            Modifier
+                .padding(horizontal = 8.dp)
+                .weight(1f)) {
             Text(
                 text = item.name,
                 style = MaterialTheme.typography.titleLarge
@@ -76,6 +93,12 @@ private fun PersonalItem(item: PersonalItem, quantity: Int) {
                 text = "${item.weight.format()} kg",
                 style = MaterialTheme.typography.bodyLarge
             )
+        }
+        if (inLuggage) {
+            Text(text = quantity.toString())
+            IconButton(onClick = { onQuantityChange(quantity - 1) }) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "delete")
+            }
         }
     }
 }
