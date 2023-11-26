@@ -15,6 +15,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,20 +36,21 @@ fun LuggageScreen(vm: LuggageViewmodel) {
             )
         },
     ) { innerPadding ->
+        val personalItems by vm.personalItems.collectAsState()
         LazyColumn(
             Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            items(vm.personalItems) {
-                PersonalItem(it)
+            items(personalItems) { (item, quantity) ->
+                PersonalItem(item = item, quantity = quantity)
             }
         }
     }
 }
 
 @Composable
-private fun PersonalItem(item: PersonalItem) {
+private fun PersonalItem(item: PersonalItem, quantity: Int) {
     Row(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
