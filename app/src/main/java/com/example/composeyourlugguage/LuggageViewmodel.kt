@@ -23,6 +23,14 @@ class LuggageViewmodel : ViewModel() {
             mapItemQuantity.value += item to quantity
         }
     }
+
+    val numPersonalItems = personalItems.map { items ->
+        items.sumOf { it.quantity }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0f)
+
+    val totalWeight = personalItems.map { items ->
+        items.map { it.quantity * it.item.weight }.sum()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0f)
 }
 
 data class PersonalItemInLuggage(val item: PersonalItem, val quantity: Int)
