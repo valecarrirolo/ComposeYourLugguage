@@ -1,5 +1,7 @@
 package com.example.composeyourlugguage
 
+import java.text.DecimalFormat
+
 data class PersonalItem(
     val emoji: String,
     val name: String,
@@ -41,3 +43,6 @@ object LuggageData {
         PersonalItem("💊", "Medicine", weight = 0.3f),
     )
 }
+
+private val numberFormatter = DecimalFormat("#.##")
+fun Number.format(): String = numberFormatter.format(this).toString()
